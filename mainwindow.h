@@ -10,6 +10,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private:
+    QPixmap backgroundPixmap;
+
+private slots:
+    void setPhotoDirectory();
+
+
 };
 
 #endif // MAINWINDOW_H
