@@ -4,14 +4,38 @@
 #include <QTime>
 #include <QFileDialog>
 #include <QDir>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPixmap>
+#include <QSizePolicy>
 
-MainWindow::MainWindow(QWidget *parent)
+BackgroundWidget::BackgroundWidget(const QPixmap& pixmap, QWidget* parent)
+    : QWidget(parent), backgroundPixmap(pixmap)
+{
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    QHBoxLayout* layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    QLabel* backgroundLabel = new QLabel(this);
+    backgroundLabel->setPixmap(backgroundPixmap);
+    backgroundLabel->setScaledContents(true);
+    layout->addWidget(backgroundLabel);
+}
+
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
     setWindowTitle("Генератор случайных чисел");
     setFixedSize(300, 200);
 
-    QPushButton *button = new QPushButton("Сгенерировать случайное число", this);
+    QString imagePath = "D:/Coding/QT_PP/radommap/1.png"; // Замените путь к фотографии на свой
+    QPixmap backgroundPixmap(imagePath);
+
+    BackgroundWidget* backgroundWidget = new BackgroundWidget(backgroundPixmap, this);
+    setCentralWidget(backgroundWidget);
+
+    QPushButton* button = new QPushButton("Сгенерировать случайное число", backgroundWidget);
     button->setGeometry(50, 50, 200, 30);
 
     connect(button, &QPushButton::clicked, [=]() {
@@ -20,14 +44,11 @@ MainWindow::MainWindow(QWidget *parent)
 
         int randomNumber = qrand() % 100 + 1;
         QMessageBox::information(this, "Случайное число", "Сгенерировано случайное число: " + QString::number(randomNumber));
-
-        backgroundPixmap.load("D:/Coding/QT_PP/radommap/1.jpg"); // Замените путь к фотографии на свой
-
-        QPalette palette;
-        palette.setBrush(QPalette::Window, backgroundPixmap);
-        setPalette(palette);
-
     });
+
+    QHBoxLayout* mainLayout = new QHBoxLayout(backgroundWidget);
+    mainLayout->addWidget(button);
+    mainLayout->setAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::setPhotoDirectory()
