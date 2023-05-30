@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(button, &QPushButton::clicked, [=]() {
         QTime time = QTime::currentTime();
         qsrand(static_cast<uint>(time.msec()));
+
+        int randomNumber = qrand() % 1912111 + 1;
+        QMessageBox::information(this, "Случайное число", "Сгенерировано случайное число: " + QString::number(randomNumber));
     });
 
     setCentralWidget(button);
